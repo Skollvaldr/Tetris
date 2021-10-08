@@ -8,44 +8,58 @@ namespace Tetris
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        InputHandler inputHandler;
+        GameWorld gameWorld;
+        public enum GameState { start, playing, gameover };
+        public static GameState gameState;
+        Texture2D background;
 
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = 640;
+            _graphics.PreferredBackBufferHeight = 768;
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
         }
 
+        public static GameState Gamestate
+        {
+            get { return gameState;  }
+            set { gameState = value; }
+        }
+        
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            inputHandler = new InputHandler();
+            gameWorld = new GameWorld(Content);
+            gameState = GameState.start;
+            background = Content.Load<Texture2D>("background");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            inputHandler.Update();
+            if (inputHandler.KeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(Color.White);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(background, new Vector2(), Color.White);
+            gameWorld.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

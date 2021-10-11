@@ -9,7 +9,7 @@ namespace Tetris
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         InputHandler inputHandler;
-        GameWorld gameWorld;
+        static GameWorld gameWorld;
         public enum GameState { start, playing, gameover };
         public static GameState gameState;
         Texture2D background;
@@ -47,6 +47,7 @@ namespace Tetris
         protected override void Update(GameTime gameTime)
         {
             inputHandler.Update();
+            gameWorld.Update();
             if (inputHandler.KeyDown(Keys.Escape))
                 Exit();
 

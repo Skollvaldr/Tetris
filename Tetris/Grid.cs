@@ -11,10 +11,9 @@ namespace Tetris
         public Color[,] grid;
         public bool[,] filled;
 
-
-        public Grid(ContentManager content)
+        public Grid(ContentManager Content)
         {
-            block = content.Load<Texture2D>("block");
+            block = Content.Load<Texture2D>("block");
             grid = new Color[10, 24];
             filled = new bool[10, 24];
             for (int i = 0; i < 10; i++)

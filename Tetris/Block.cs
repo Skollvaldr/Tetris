@@ -9,56 +9,11 @@ namespace Tetris
 {
     class Block
     {
-        /*
-        
-        long
-
-        {false, true, false, false},
-        {false, true, false, false},
-        {false, true, false, false},
-        {false, true, false, false}
-
-        cube
-
-        {true, true},
-        {true, true}
-
-        right
-
-        {false, true, false},
-        {false, true, false},
-        {false, true, true}
-
-        left
-
-        {false, true, false},
-        {false, true, false},
-        {true, true, false}
-
-        middle
-
-        {false, true, false},
-        {true, true, true},
-        {false, false, false}
-
-        leftZig
-
-        {{false, false, false},
-        {true, true, false},
-        {false, true, true}
-
-        rightZig
-
-        {false, false, false},
-        {false, true, true},
-        {true, true, false}
-
-        */
         Texture2D block;
         InputHandler inputHandler;
         public bool[,] shape;
-        Color shapeColor;
-        Vector2 pos;
+        public Color shapeColor;
+        public Vector2 pos;
         Vector2 spd;
         Vector2 move;
 
@@ -68,21 +23,18 @@ namespace Tetris
             block = Content.Load<Texture2D>("block");
             spd = new Vector2(0, 32);
             move = new Vector2(32, 0);
-            pos = new Vector2(0, 0);
         }
-
-        public Block() { }
 
         public void Update(GameTime gameTime)
         {
             inputHandler.Update();
             if (inputHandler.MouseLeftButtonPressed())
             {
-
+                shape = RotateMatrix(shape, shape.GetLength(0), false);
             }
-            else if (inputHandler.MouseLeftButtonPressed())
+            else if (inputHandler.MouseRightButtonPressed())
             {
-
+                shape = RotateMatrix(shape, shape.GetLength(0), true);
             }
             if (inputHandler.KeyPressed(Keys.Space))
             {
@@ -90,20 +42,20 @@ namespace Tetris
             }
             else if (inputHandler.KeyPressed(Keys.A))
             {
-
+                pos -= move;
             }
             else if (inputHandler.KeyPressed(Keys.D))
             {
-                
+                pos += move;
             }
             else if (inputHandler.KeyPressed(Keys.S))
             {
-
+                pos += spd;
             }
 
-            if (gameTime.TotalGameTime.TotalMilliseconds * (GameWorld.score / 500 + 1) % 500 == 0)
+            if ((int)gameTime.TotalGameTime.TotalMilliseconds % 1000 == 500)
             {
-                pos += move;
+                pos += spd;
             }
         }
         
@@ -114,42 +66,124 @@ namespace Tetris
                     if (shape[i, j] == true)
                         spriteBatch.Draw(block, new Vector2(i * 32, j * 32) + pos, shapeColor);
         }
+
+        private bool[,] RotateMatrix(bool[,] matrix, int n, bool right)
+        {
+            bool[,] ret = new bool[n,n];
+
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    if (right)
+                        ret[i, j] = matrix[n - j - 1, i];
+                    else
+                        ret[i, j] = matrix[j, n - i - 1];
+
+            return ret;
+        }
     }
 
     class Straight : Block
     {
-        public Straight()
+        public Straight(ContentManager Content) : base(Content)
         {
-            shape = new bool[4,4];
+            shape = new bool[4, 4] 
+            {
+                {false, false, false, false},
+                {true, true, true, true},
+                {false, false, false, false},
+                {false, false, false, false}
+            };
+            shapeColor = Color.CornflowerBlue;
+            pos = new Vector2(96, -128);
         }
     }
 
     class Cube : Block
     {
-        
+        public Cube(ContentManager Content) : base(Content)
+        {
+            shape = new bool[2, 2] 
+            {
+                {true, true},
+                {true, true}
+            };
+            shapeColor = Color.Yellow;
+            pos = new Vector2(128, -64);
+        }
     }
 
     class Right : Block
     {
-        
+        public Right(ContentManager Content) : base(Content)
+        {
+            shape = new bool[3, 3] 
+            {
+                {false, false, true},
+                {true, true, true},
+                {false, false, false} 
+            };
+            shapeColor = Color.Orange;
+            pos = new Vector2(96, -64);
+        }
     }
 
     class Left : Block
     {
-        
+        public Left(ContentManager Content) : base(Content)
+        {
+            shape = new bool[3, 3]
+            {
+                {true, false, false},
+                {true, true, true},
+                {false, false, false} 
+            };
+            shapeColor = Color.Blue;
+            pos = new Vector2(96, -64);
+        }
     }
 
     class Middle : Block
     {
-        
+        public Middle(ContentManager Content) : base(Content)
+        {
+            shape = new bool[3, 3]
+            {
+                {false, true, false},
+                {true, true, true},
+                {false, false, false}
+            };
+            shapeColor = Color.Magenta;
+            pos = new Vector2(96, -64);
+        }
     }
 
     class RightZig : Block
     {
-        
+        public RightZig(ContentManager Content) : base(Content)
+        {
+            shape = new bool[3, 3]
+            {
+                {false, true, true},
+                {true, true, false},
+                {false, false, false}
+            };
+            shapeColor = Color.LimeGreen;
+            pos = new Vector2(96, -64);
+        }
     }
 
     class LeftZig : Block
-    { 
+    {
+        public LeftZig(ContentManager Content) : base(Content)
+        {
+            shape = new bool[3, 3]
+            {
+                {true, true, false},
+                {false, true, true},
+                {false, false, false} 
+            };
+            shapeColor = Color.Red;
+            pos = new Vector2(96, -64);
+        }
     }
 }

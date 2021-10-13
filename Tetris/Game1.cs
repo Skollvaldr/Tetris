@@ -23,16 +23,11 @@ namespace Tetris
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
         }
-
-        public static GameState Gamestate
-        {
-            get { return gameState;  }
-            set { gameState = value; }
-        }
         
         protected override void Initialize()
         {
             base.Initialize();
+            gameState = GameState.start;
         }
 
         protected override void LoadContent()
@@ -40,14 +35,13 @@ namespace Tetris
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             inputHandler = new InputHandler();
             gameWorld = new GameWorld(Content);
-            gameState = GameState.start;
             background = Content.Load<Texture2D>("background");
         }
 
         protected override void Update(GameTime gameTime)
         {
             inputHandler.Update();
-            gameWorld.Update();
+            gameWorld.Update(gameTime);
             if (inputHandler.KeyDown(Keys.Escape))
                 Exit();
 
@@ -63,6 +57,12 @@ namespace Tetris
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public static GameState Gamestate
+        {
+            get { return gameState; }
+            set { gameState = value; }
         }
     }
 }

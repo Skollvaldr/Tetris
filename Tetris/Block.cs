@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 
 namespace Tetris
 {
@@ -38,7 +37,9 @@ namespace Tetris
             }
             if (inputHandler.KeyPressed(Keys.Space))
             {
-
+                for (int i = 0; i < 10; i++)
+                    pos += spd;
+                GameWorld.score += 5;
             }
             else if (inputHandler.KeyPressed(Keys.A))
             {
@@ -118,12 +119,12 @@ namespace Tetris
         {
             shape = new bool[3, 3] 
             {
-                {false, false, true},
-                {true, true, true},
-                {false, false, false} 
+                {true, true, false},
+                {false, true, false},
+                {false, true, false} 
             };
             shapeColor = Color.Orange;
-            pos = new Vector2(96, -64);
+            pos = new Vector2(128, -64);
         }
     }
 
@@ -133,12 +134,12 @@ namespace Tetris
         {
             shape = new bool[3, 3]
             {
-                {true, false, false},
-                {true, true, true},
-                {false, false, false} 
+                {false, true, false},
+                {false, true, false},
+                {true, true, false} 
             };
             shapeColor = Color.Blue;
-            pos = new Vector2(96, -64);
+            pos = new Vector2(128, -64);
         }
     }
 
@@ -149,11 +150,11 @@ namespace Tetris
             shape = new bool[3, 3]
             {
                 {false, true, false},
-                {true, true, true},
-                {false, false, false}
+                {true, true, false},
+                {false, true, false}
             };
             shapeColor = Color.Magenta;
-            pos = new Vector2(96, -64);
+            pos = new Vector2(128, -64);
         }
     }
 
@@ -163,12 +164,12 @@ namespace Tetris
         {
             shape = new bool[3, 3]
             {
-                {false, true, true},
+                {true, false, false},
                 {true, true, false},
-                {false, false, false}
+                {false, true, false}
             };
             shapeColor = Color.LimeGreen;
-            pos = new Vector2(96, -64);
+            pos = new Vector2(128, -64);
         }
     }
 
@@ -178,12 +179,12 @@ namespace Tetris
         {
             shape = new bool[3, 3]
             {
+                {false, true, false},
                 {true, true, false},
-                {false, true, true},
-                {false, false, false} 
+                {true, false, false} 
             };
             shapeColor = Color.Red;
-            pos = new Vector2(96, -64);
+            pos = new Vector2(128, -64);
         }
     }
 }

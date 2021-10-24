@@ -8,12 +8,12 @@ namespace Tetris
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        InputHandler inputHandler;
-        GameStart gameStart;
-        static GameWorld gameWorld;
-        GameOver gameOver;
+        private InputHandler inputHandler;
+        private GameStart gameStart;
+        private static GameWorld gameWorld;
+        private static GameOver gameOver;
         public enum GameState { gameStart, gameWorld, gameOver };
-        public static GameState gameState;
+        private static GameState gameState;
 
 
         public Game1()
@@ -33,14 +33,15 @@ namespace Tetris
 
         protected override void LoadContent()
         {
+            // Hierdoor begint de game in de gamestart en kunnen spritebatch en inputhandler gebruikt worden.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             inputHandler = new InputHandler();
             gameStart = new GameStart(Content);
-            gameOver = new GameOver(Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
+            // Deze if-statements zorgen ervoor dat op elk moment de correcte gamestate update.
             inputHandler.Update();
             if (inputHandler.KeyDown(Keys.Escape))
                 Exit();
@@ -62,6 +63,7 @@ namespace Tetris
 
         protected override void Draw(GameTime gameTime)
         {
+            // Deze if-statements zorgen ervoor dat op elk moment de correcte gamestate getekent wordt.
             GraphicsDevice.Clear(Color.White);
             _spriteBatch.Begin();
             
@@ -83,6 +85,7 @@ namespace Tetris
             base.Draw(gameTime);
         }
 
+        // Deze 3 methode zorgen ervoor dat de gamestates verandert kunnen worden vanuit elke class.
         public static GameState Gamestate
         {
             get { return gameState; }
@@ -93,6 +96,12 @@ namespace Tetris
         {
             get { return gameWorld; }
             set { gameWorld = value; }
+        }
+
+        public static GameOver Gameover
+        {
+            get { return gameOver; }
+            set { gameOver = value; }
         }
     }
 }

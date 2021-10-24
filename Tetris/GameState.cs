@@ -3,28 +3,37 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Tetris
 {
     public class GameState
     {
         protected SpriteFont font;
-        Texture2D background;
-        protected Grid grid;
-        protected InputHandler inputHandler;
+        private Texture2D background;
+        protected static InputHandler inputHandler;
 
         public GameState(ContentManager Content)
         {
+            // Laad een achtergrond en een spritefont.
             background = Content.Load<Texture2D>("background");
             font = Content.Load<SpriteFont>("Score");
-            grid = new Grid(Content);
             inputHandler = new InputHandler();
         }
 
-        public void Drawing(SpriteBatch spriteBatch)
+        public void Update()
+        {
+            inputHandler.Update();
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background, new Vector2(), Color.White);
-            grid.Draw(spriteBatch);
+        }
+
+        public static InputHandler InputHandler
+        {
+            get { return inputHandler; }
         }
     }
 
@@ -34,37 +43,53 @@ namespace Tetris
         public void Update(ContentManager Content)
         {
             inputHandler.Update();
-            if (inputHandler.KeyPressed(Keys.Space))
+
+            // Zorgt ervoor dat het spel start als je op enter klikt.
+            if (inputHandler.KeyPressed(Keys.Enter))
             {
                 Game1.Gamestate = Game1.GameState.gameWorld;
                 Game1.Gameworld = new GameWorld(Content);
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public new void Draw(SpriteBatch spriteBatch)
         {
-            base.Drawing(spriteBatch);
-            spriteBatch.DrawString(font, "Press space\r\nto start", new Vector2(320, 350), Color.Black, 0, new Vector2(), 2f, 0, 0);
+            base.Draw(spriteBatch);
+
+            // Laat de speler weten dat het spel gestart kan worden door op enter te klikken.
+            spriteBatch.DrawString(font, "Press enter to start", new Vector2(56, 320), Color.Black, 0, new Vector2(), 2f, 0, 0);
         }
     }
 
-    class GameOver : GameState
+    public class GameOver : GameState
     {
-        public GameOver(ContentManager Content) : base(Content) { }
+        SoundEffect gameOver;
+
+        public GameOver(ContentManager Content) : base(Content) 
+        { 
+            // Laadt en speelt het soundeffect voor als je gameover gaat.
+            gameOver = Content.Load<SoundEffect>("game_over");
+            gameOver.Play();
+        }
         public void Update(ContentManager Content)
         {
             inputHandler.Update();
-            if (inputHandler.KeyPressed(Keys.Space))
+            
+            // Als je op enter klikt terwijl je gameover bent dan restart je het spel.
+            if (inputHandler.KeyPressed(Keys.Enter))
             {
                 Game1.Gamestate = Game1.GameState.gameWorld;
                 Game1.Gameworld = new GameWorld(Content);
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public new void Draw(SpriteBatch spriteBatch)
         {
-            base.Drawing(spriteBatch);
-            spriteBatch.DrawString(font, "Game over\r\n \r\nPress space to restart", new Vector2(320, 350), Color.Black, 0, new Vector2(), 2f, 0, 0);
+            base.Draw(spriteBatch);
+
+            // laat de speler weten dat de game opnieuw kan worden gespeeld door op enter te klikken.
+            spriteBatch.DrawString(font, "Game over!", new Vector2(128, 288), Color.Black, 0, new Vector2(), 2f, 0, 0);
+            spriteBatch.DrawString(font, "Press Enter to restart", new Vector2(8, 352), Color.Black, 0, new Vector2(), 2f, 0, 0);
         }
     }
 }
